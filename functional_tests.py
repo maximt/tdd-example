@@ -28,21 +28,25 @@ class NewVisitorTest(unittest.TestCase):
             'Enter item'
         )
         inputbox.send_keys('Buy feathers')
+        time.sleep(1)
         inputbox.send_keys(Keys.ENTER)
-
         time.sleep(1)
 
         # check is item created
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy feathers' for row in rows),
-            'New item not added'
+        # self.assertTrue(
+        #     any(row.text == '1: Buy feathers' for row in rows),
+        #     f"New item not added.\nContent:\n{table.text}"
+        # )
+        self.assertIn(
+            '1: Buy feathers', 
+            [row.text for row in rows]
         )
-
+        
         #todo create another item
 
-        self.fail('End test')
+        # self.fail('End test')
 
 
 if __name__ == '__main__':

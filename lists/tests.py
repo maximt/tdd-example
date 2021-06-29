@@ -11,4 +11,8 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
-        
+    def test_post_request(self):
+        item_text = 'This is a new item'
+        response = self.client.post('/', data={'item_text': item_text})
+        self.assertIn(item_text, response.content.decode())
+        self.assertTemplateUsed(response, 'home.html')
