@@ -1,10 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
 import time
 import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -21,7 +22,7 @@ class NewVisitorTest(unittest.TestCase):
         )
 
     def test_start_and_retrieve_list(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # is this main page?
         self.assertIn('To-Do', self.browser.title)
@@ -51,6 +52,3 @@ class NewVisitorTest(unittest.TestCase):
 
         # self.fail('End test')
 
-
-if __name__ == '__main__':
-    unittest.main()
