@@ -20,7 +20,8 @@ from lists import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lists/my-single-list/', views.page_list),
-    path('lists/new', views.new_list),
+    path('lists/<list_id>/', views.page_list, name='page_list'),
+    path('lists/<list_id>/add_item', views.add_item, name='add_item'),
+    path('lists/new', views.new_list, name='new_list'),
     path('', views.home_page, name='home'),
 ]
