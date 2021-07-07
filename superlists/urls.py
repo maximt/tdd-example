@@ -21,7 +21,7 @@ from lists import urls as lists_urls
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('', lists_views.home_page, name='home'),
     path('lists/', include(lists_urls))
 ]
