@@ -1,0 +1,11 @@
+[Unit]
+Description=Gunicorn server SITENAME
+
+[Service]
+Restart=on-failure
+User=maxim
+WorkingDirectory=/home/maxim/sites/SITENAME/source
+ExecStart=/home/maxim/sites/SITENAME/virtualenv/bin/gunicorn --bind=unix:/tmp/SITENAME.socket superlists.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
