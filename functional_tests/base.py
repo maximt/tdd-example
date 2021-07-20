@@ -8,6 +8,7 @@ WAIT_MAX = 5
 
 
 class FunctionalTest(StaticLiveServerTestCase):
+
     def setUp(self):
         self.browser = webdriver.Firefox()
         url = os.environ.get('STAGING_SERVER')
@@ -28,6 +29,16 @@ class FunctionalTest(StaticLiveServerTestCase):
                     [row.text for row in rows]
                 )
                 return
+            except (AssertionError, WebDriverException) as e:
+                if (time.time() - start_time) > WAIT_MAX:
+                    raise e
+                time.sleep(0.5)
+
+    def wait_for(self, fn):
+        start_time = time.time()
+        while True:
+            try:
+                return fn()
             except (AssertionError, WebDriverException) as e:
                 if (time.time() - start_time) > WAIT_MAX:
                     raise e
