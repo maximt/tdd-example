@@ -38,4 +38,4 @@ class ItemValidationTest(FunctionalTest):
         self.wait_for_element('1: buy milk')
         self.wait_for_element('2: make tea')
 
-        self.fail('todo')
+
