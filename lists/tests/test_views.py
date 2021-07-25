@@ -15,7 +15,7 @@ class HomePageTest(TestCase):
 
 class ListViewTest(TestCase):
 
-    def test_display_onjy_items_for_list(self):
+    def test_display_only_items_for_list(self):
         correct_list = List.objects.create()
         Item.objects.create(text='Correct item 1', list=correct_list)
         Item.objects.create(text='Correct item 2', list=correct_list)
@@ -44,23 +44,6 @@ class ListViewTest(TestCase):
 
         self.assertEqual(response.context['list'], correct_list)
 
-
-class NewListTest(TestCase):
-
-    def test_save_post_request(self):
-        item_text = 'This is a new item'
-        response = self.client.post('/lists/new', data={'item_text': item_text})
-
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, item_text)
-
-    def test_redirect_after_post(self):
-        response = self.client.post('/lists/new', data={'item_text': 'This is a new item'})
-        
-        list_ = List.objects.first()
-        self.assertRedirects(response, f'/lists/{list_.id}/')
-
     def test_can_save_post_request_to_exists_list(self):
         new_item_text = 'A new item for existing list'
 
@@ -68,7 +51,7 @@ class NewListTest(TestCase):
         correct_list = List.objects.create()
         
         self.client.post(
-            f'/lists/{correct_list.id}/add_item',
+            f'/lists/{correct_list.id}/',
             data={'item_text': new_item_text},
         )
 
@@ -85,11 +68,27 @@ class NewListTest(TestCase):
         correct_list = List.objects.create()
         
         response = self.client.post(
-            f'/lists/{correct_list.id}/add_item',
+            f'/lists/{correct_list.id}/',
             data={'item_text': new_item_text},
         )
 
         self.assertRedirects(response, f'/lists/{correct_list.id}/')
+
+class NewListTest(TestCase):
+
+    def test_save_post_request(self):
+        item_text = 'This is a new item'
+        response = self.client.post('/lists/new', data={'item_text': item_text})
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, item_text)
+
+    def test_redirect_after_post(self):
+        response = self.client.post('/lists/new', data={'item_text': 'This is a new item'})
+        
+        list_ = List.objects.first()
+        self.assertRedirects(response, f'/lists/{list_.id}/')
 
     def test_validation_errors_are_sent_back_to_home_page_tmpl(self):
         response = self.client.post('/lists/new', data={'item_text': ''})
