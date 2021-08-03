@@ -11,33 +11,25 @@ class ItemValidationTest(FunctionalTest):
         # send empty item
         self.get_item_input_box().send_keys(Keys.ENTER)
 
-        # wait for error message
-        self.wait_for(lambda: self.assertEqual(
-            self.browser.find_element_by_css_selector('.has-error').text,
-            "You can't have empty list item"
-        ))
+        # check browser-side validation
+        self.wait_for(lambda: self.browser.find_elements_by_css_selector('#id_text:invalid'))
 
         # send new item
         inputbox = self.get_item_input_box()
         inputbox.send_keys('buy milk')
+        self.wait_for(lambda: self.browser.find_elements_by_css_selector('#id_text:valid'))
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_element('1: buy milk')
 
         # send empty again
         self.get_item_input_box().send_keys(Keys.ENTER)
-
-        # wait for error message again
-        self.wait_for(lambda: self.assertEqual(
-            self.browser.find_element_by_css_selector('.has-error').text,
-            "You can't have empty list item"
-        ))
+        self.wait_for(lambda: self.browser.find_elements_by_css_selector('#id_text:invalid'))
 
         # send new item again
         inputbox = self.get_item_input_box()
         inputbox.send_keys('make tea')
+        self.wait_for(lambda: self.browser.find_elements_by_css_selector('#id_text:valid'))
         inputbox.send_keys(Keys.ENTER)
-
         self.wait_for_element('1: buy milk')
         self.wait_for_element('2: make tea')
-
 
