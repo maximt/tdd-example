@@ -9,7 +9,7 @@ class ItemValidationTest(FunctionalTest):
         self.browser.get(self.live_server_url)
 
         # send empty item
-        self.browser.find_element_by_id('id_new_item').send_keys(Keys.ENTER)
+        self.get_item_input_box().send_keys(Keys.ENTER)
 
         # wait for error message
         self.wait_for(lambda: self.assertEqual(
@@ -18,12 +18,13 @@ class ItemValidationTest(FunctionalTest):
         ))
 
         # send new item
-        self.browser.find_element_by_id('id_new_item').send_keys('buy milk')
-        self.browser.find_element_by_id('id_new_item').send_keys(Keys.ENTER)
+        inputbox = self.get_item_input_box()
+        inputbox.send_keys('buy milk')
+        inputbox.send_keys(Keys.ENTER)
         self.wait_for_element('1: buy milk')
 
         # send empty again
-        self.browser.find_element_by_id('id_new_item').send_keys(Keys.ENTER)
+        self.get_item_input_box().send_keys(Keys.ENTER)
 
         # wait for error message again
         self.wait_for(lambda: self.assertEqual(
@@ -32,8 +33,9 @@ class ItemValidationTest(FunctionalTest):
         ))
 
         # send new item again
-        self.browser.find_element_by_id('id_new_item').send_keys('make tea')
-        self.browser.find_element_by_id('id_new_item').send_keys(Keys.ENTER)
+        inputbox = self.get_item_input_box()
+        inputbox.send_keys('make tea')
+        inputbox.send_keys(Keys.ENTER)
 
         self.wait_for_element('1: buy milk')
         self.wait_for_element('2: make tea')
