@@ -5,7 +5,7 @@ from .base import FunctionalTest
 
 
 TEST_EMAIL = 'test@test.ts'
-SUBJECT = 'Superlists: Your login link'
+SUBJECT = 'Your login link for Superlists'
 
 
 class LoginTest(FunctionalTest):
@@ -27,7 +27,7 @@ class LoginTest(FunctionalTest):
         email = mail.outbox[0]
         self.assertIn(TEST_EMAIL, email.to)
         self.assertEqual(email.subject, SUBJECT)
-        self.assertIn('Use this link to log in:', email.body)
+        self.assertIn('Use this link to log in', email.body)
 
         url_search = re.search('http://.+/.+$', email.body)
         if not url_search:
@@ -39,10 +39,7 @@ class LoginTest(FunctionalTest):
         self.browser.get(url_login)
 
         # check is logged in
-        links = self.wait_for(lambda: self.assertTrue(
-            self.browser.find_elements_by_link_text('Log out')
-        ))
-        print( links)
+        self.wait_for(lambda: self.browser.find_element_by_link_text('Log out'))
         navbar = self.browser.find_element_by_css_selector('.navbar')
         self.assertIn(TEST_EMAIL, navbar.text)
 
