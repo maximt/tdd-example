@@ -1,7 +1,7 @@
 import re
 import time
 import os
-import  poplib
+import imaplib
 from selenium.webdriver.common.keys import Keys
 from django.core import mail
 from .base import FunctionalTest
@@ -19,32 +19,30 @@ class LoginTest(FunctionalTest):
             self.assertEqual(email.subject, subject)
             return email.body
 
-        email_id = None
         start = time.time()
-        inbox = poplib.POP3_SSL('pop3.yandex.ru')
+        imap = imaplib.IMAP4_SSL('imap.yandex.ru')
         try:
-            inbox.user(test_email)
-            inbox.pass_(os.environ['EMAIL_PASSWORD'])
-
-            while (time.time() - start) < 60:
-                count, _ = inbox.stat()
-                for i in reversed(range(max(1, count - 10), count + 1)):
-                    print('Getting msg', i)
-                    _, lines, __ = inbox.retr(i)
-                    lines = [l.decode('utf8') for l in lines]
-                    if f'Subject: {subject}':
-                        email_id = i
-                        body = '\n'.join(lines)
-                        return body
-
+            imap.login(test_email, os.environ['EMAIL_PASSWORD'])
+            while (time.time() - start) < 120:
+                imap.select('INBOX')
+                typ, data = imap.search(None, 'ALL')
+                for msg_id in data[0].split():
+                    _, raw_data = imap.fetch(msg_id, '(RFC822)')
+                    msg_data = raw_data[0][1].split(b'\r\n')
+                    lines = [l.decode('latin-1') for l in msg_data]
+                    for l in lines:
+                        if f'Subject: {subject}' in l:
+                            body = '\n'.join(lines)
+                            imap.store(msg_id, '+FLAGS', '\\Deleted')
+                            return body
+                time.sleep(5)
         finally:
-            if email_id:
-                inbox.dele(email_id)
-            inbox.quit()
+            imap.close()
+            imap.logout()
 
     def test_can_get_email_link_to_login(self):
         if self.staging_server:
-            test_email = 'vbmax@ya.ru'
+            test_email = 'vbmax@yandex.ru'
         else:
             test_email = 'test@test.test'
 

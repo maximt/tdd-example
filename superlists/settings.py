@@ -156,7 +156,7 @@ AUTHENTICATION_BACKENDS = [
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'vbmax@ya.ru'
+EMAIL_HOST_USER = 'vbmax@yandex.ru'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 LOGIN_REDIRECT_URL = '/'
