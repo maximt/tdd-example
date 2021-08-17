@@ -21,7 +21,7 @@ class LoginTest(FunctionalTest):
 
         email_id = None
         start = time.time()
-        inbox = poplib.POP3_SSL('pop3.promsvyaz.pro')
+        inbox = poplib.POP3_SSL('pop3.yandex.ru')
         try:
             inbox.user(test_email)
             inbox.pass_(os.environ['EMAIL_PASSWORD'])
