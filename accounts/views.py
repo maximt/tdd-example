@@ -14,7 +14,7 @@ def send_login_email(request):
     send_mail(
         'Your login link for Superlists',
         body_msg,
-        'monitor@promsvyaz.pro',
+        'vbmax@ya.ru',
         [email],
     )
     messages.success(

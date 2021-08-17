@@ -153,10 +153,10 @@ AUTHENTICATION_BACKENDS = [
     'accounts.authentication.PasswordlessAuthenticationBackend',
 ]
 
-EMAIL_HOST = 'smtp.promsvyaz.pro'
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = 'monitor@promsvyaz.pro'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'vbmax@ya.ru'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 LOGIN_REDIRECT_URL = '/'
