@@ -155,7 +155,7 @@ AUTHENTICATION_BACKENDS = [
 
 EMAIL_HOST = 'smtp.promsvyaz.pro'
 EMAIL_PORT = 25
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = False
 EMAIL_HOST_USER = 'monitor@promsvyaz.pro'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
