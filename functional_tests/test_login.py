@@ -37,7 +37,7 @@ class LoginTest(FunctionalTest):
                             return body
                 time.sleep(5)
         finally:
-            imap.close()
+            # imap.close()
             imap.logout()
 
     def test_can_get_email_link_to_login(self):
