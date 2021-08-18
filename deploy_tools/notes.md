@@ -14,6 +14,7 @@ sudo apt-get install nginx git python3 python3-venv
 ## systemd
 * gunicorn-systemd.template.service
 * Replace SITENAME
+* Replace ENVFILE
 
 ## Dirs
     /home/username

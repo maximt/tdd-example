@@ -4,8 +4,13 @@ Description=Gunicorn server SITENAME
 [Service]
 Restart=on-failure
 User=maxim
+EnvironmentFile=/home/maxim/sites/SITENAME/env/ENVFILE
 WorkingDirectory=/home/maxim/sites/SITENAME/source
-ExecStart=/home/maxim/sites/SITENAME/virtualenv/bin/gunicorn --bind=unix:/tmp/SITENAME.socket superlists.wsgi:application
+ExecStart=/home/maxim/sites/SITENAME/virtualenv/bin/gunicorn \
+ --bind=unix:/tmp/SITENAME.socket \
+ --capture-output --access-logfile ../access.log --error-logfile ../error.log \
+ superlists.wsgi:application
+
 
 [Install]
 WantedBy=multi-user.target
