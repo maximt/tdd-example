@@ -1,6 +1,7 @@
 from django.conf import settings
-from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
-from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.auth import get_user_model
+from .management.commands.create_session import create_pre_authenticated_session
+from .server_tools import create_session_on_server
 from .base import FunctionalTest
 
 
@@ -10,17 +11,16 @@ User = get_user_model()
 class MyListsTest(FunctionalTest):
 
     def create_pre_authenticated_session(self, email):
-        user = User.objects.create(email=email)
+        if self.staging_server:
+            session_key = create_session_on_server(self.staging_server, email)
+        else:
+            session_key = create_pre_authenticated_session(email)
 
-        session = SessionStore()
-        session[SESSION_KEY] = user.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-        session.save()
-
+        # visit any page to set a cookies
         self.browser.get(self.live_server_url + '/404_url')
         self.browser.add_cookie(dict(
             name=settings.SESSION_COOKIE_NAME,
-            value=session.session_key,
+            value=session_key,
             path='/',
         ))
 
