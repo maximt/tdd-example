@@ -40,9 +40,7 @@ class ItemValidationTest(FunctionalTest):
         self.browser.get(self.live_server_url)
 
         # add one
-        self.get_item_input_box().send_keys('Buy wellies')
-        self.get_item_input_box().send_keys(Keys.ENTER)
-        self.wait_for_element('1: Buy wellies')
+        self.add_list_item('Buy wellies')
 
         # add two
         self.get_item_input_box().send_keys('Buy wellies')
@@ -58,9 +56,7 @@ class ItemValidationTest(FunctionalTest):
         self.browser.get(self.live_server_url)
 
         # send item
-        self.get_item_input_box().send_keys('Banter too thick')
-        self.get_item_input_box().send_keys(Keys.ENTER)
-        self.wait_for_element('1: Banter too thick')
+        self.add_list_item('Banter too thick')
 
         # send second item
         self.get_item_input_box().send_keys('Banter too thick')

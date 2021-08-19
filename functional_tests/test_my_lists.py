@@ -25,11 +25,34 @@ class MyListsTest(FunctionalTest):
         ))
 
     def test_logged_in_users_lists_are_saved_as_my_lists(self):
-        email = 'test@test.test'
-        self.browser.get(self.live_server_url)
+        self.create_pre_authenticated_session('test@test.test')
 
-        self.wait_to_be_logged_out(email=email)
-
-        self.create_pre_authenticated_session(email=email)
+        # start new list
         self.browser.get(self.live_server_url)
-        self.wait_to_be_logged_in(email=email)
+        self.add_list_item('Splines')
+        self.add_list_item('Eschaton')
+        url_list_first = self.browser.current_url
+
+        # go to My Lists page
+        self.browser.find_element_by_link_text('My lists').click()
+
+        # this is my list?
+        self.wait_for(lambda: self.browser.find_element_by_link_text('Splines'))
+        self.browser.find_element_by_link_text('Eschaton').click()
+        self.wait_for(lambda: self.assertEqual(self.browser.current_url, url_list_first))
+
+        # create another list
+        self.browser.get(self.live_server_url)
+        self.add_list_item('Click cows')
+        url_list_second = self.browser.current_url
+
+        # new list is here?
+        self.browser.find_element_by_link_text('My lists').click()
+        self.wait_for(lambda: self.browser.find_element_by_link_text('Click cows'))
+        self.browser.find_element_by_link_text('Click cows').click()
+        self.wait_for(lambda: self.assertEqual(self.browser.current_url, url_list_second))
+
+        # log out
+        self.browser.find_element_by_link_text('Log out').click()
+        self.wait_for(lambda: self.assertEqual(self.browser.find_elements_by_link_text('My lists'), []))
+

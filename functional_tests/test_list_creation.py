@@ -19,17 +19,10 @@ class NewVisitorTest(FunctionalTest):
             inputbox.get_attribute('placeholder'), 
             'Enter item'
         )
-        inputbox.send_keys('Buy feathers')
-        inputbox.send_keys(Keys.ENTER)
-        
-        # check is item created
-        self.wait_for_element('1: Buy feathers')
+        self.add_list_item('Buy feathers')
 
         # create another item
-        inputbox = self.get_item_input_box()
-        inputbox.send_keys('Make fly')
-        inputbox.send_keys(Keys.ENTER)
-
+        self.add_list_item('Make fly')
         # check is all items created
         self.wait_for_element('1: Buy feathers')
         self.wait_for_element('2: Make fly')
@@ -47,11 +40,7 @@ class NewVisitorTest(FunctionalTest):
             inputbox.get_attribute('placeholder'), 
             'Enter item'
         )
-        inputbox.send_keys('Buy feathers')
-        inputbox.send_keys(Keys.ENTER)
-
-        # check is item created
-        self.wait_for_element('1: Buy feathers')
+        self.add_list_item('Buy feathers')
 
         user1_list_url = self.browser.current_url
         self.assertRegex(user1_list_url, '/lists/.+')
@@ -73,11 +62,8 @@ class NewVisitorTest(FunctionalTest):
             inputbox.get_attribute('placeholder'), 
             'Enter item'
         )
-        inputbox.send_keys('Buy milk')
-        inputbox.send_keys(Keys.ENTER)
 
-        # check is item created
-        self.wait_for_element('1: Buy milk')
+        self.add_list_item('Buy milk')
 
         user2_list_url = self.browser.current_url
         self.assertRegex(user2_list_url, '/lists/.+')
