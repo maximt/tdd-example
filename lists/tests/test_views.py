@@ -1,12 +1,11 @@
 from django.test import TestCase
-from django.urls import resolve
-from django.http import HttpRequest
-from django.template.loader import render_to_string
 from django.utils.html import escape
-from lists.views import home_page
+from django.contrib.auth import get_user_model
 from lists.models import Item, List
 from lists.forms import ItemForm, ExistingListItemForm, MSG_EMPTY_ITEM_ERROR, MSG_DUPLICATE_ITEM_ERROR
-from unittest import skip
+
+
+User = get_user_model()
 
 
 class HomePageTest(TestCase):
@@ -159,9 +158,24 @@ class NewListTest(TestCase):
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertIsInstance(response.context['form'], ItemForm)
 
+    def test_list_owner_is_saved_if_user_is_authenticated(self):
+        user = User.objects.create(email='test@test.test')
+        self.client.force_login(user)
+        self.client.post('/lists/new', data={'text': 'new item'})
+        list_ = List.objects.first()
+        self.assertEqual(list_.owner, user)
+
 
 class MyListsTest(TestCase):
 
     def test_my_lists_url_renders_my_lists_template(self):
-        response = self.client.get('/lists/users/a@b.com/')
+        User.objects.create(email='test@test.test')
+        response = self.client.get('/lists/users/test@test.test/')
         self.assertTemplateUsed(response, 'my_lists.html')
+
+    def test_passes_correct_owner_to_template(self):
+        User.objects.create(email='test2@test.test')
+        user_correct = User.objects.create(email='test@test.test')
+        response = self.client.get('/lists/users/test@test.test/')
+        self.assertEqual(response.context['owner'], user_correct)
+
