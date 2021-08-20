@@ -1,6 +1,8 @@
+from django.http import HttpResponseRedirect
 from django.test import TestCase
 from django.utils.html import escape
 from django.contrib.auth import get_user_model
+from unittest.mock import patch
 from lists.models import Item, List
 from lists.forms import ItemForm, ExistingListItemForm, MSG_EMPTY_ITEM_ERROR, MSG_DUPLICATE_ITEM_ERROR
 
@@ -158,12 +160,19 @@ class NewListTest(TestCase):
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertIsInstance(response.context['form'], ItemForm)
 
-    def test_list_owner_is_saved_if_user_is_authenticated(self):
+    @patch('lists.views.List')
+    @patch('lists.views.ItemForm')
+    def test_list_owner_is_saved_if_user_is_authenticated(self, mockItemFormClass, mockListClass):
         user = User.objects.create(email='test@test.test')
         self.client.force_login(user)
+
+        mock_list = mockListClass.return_value
+        mock_list.get_absolute_url.return_value = '/'
+        mock_list.save.side_effect = lambda: self.assertEqual(mock_list.owner, user)
+
         self.client.post('/lists/new', data={'text': 'new item'})
-        list_ = List.objects.first()
-        self.assertEqual(list_.owner, user)
+
+        mock_list.save.assert_called_once_with()
 
 
 class MyListsTest(TestCase):
