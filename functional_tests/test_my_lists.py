@@ -38,7 +38,7 @@ class MyListsTest(FunctionalTest):
 
         # this is my list?
         self.wait_for(lambda: self.browser.find_element_by_link_text('Splines'))
-        self.browser.find_element_by_link_text('Eschaton').click()
+        self.browser.find_element_by_link_text('Splines').click()
         self.wait_for(lambda: self.assertEqual(self.browser.current_url, url_list_first))
 
         # create another list
